@@ -24,3 +24,12 @@ not the real location of a person.
 The city boundary has not been chosen yet, so the coordinate checks only use
 global limits for now. Update this dictionary if the final CSV has different
 columns.
+
+## Planned data behavior
+
+These are dataset-generation targets, not confirmed results:
+
+- Generate more pings during morning and evening commute periods, and fewer at night.
+- Include some devices that pass near more than one store.
+- Allow weekday and weekend patterns to differ.
+- Use a fixed random seed so the mock dataset can be reproduced.
