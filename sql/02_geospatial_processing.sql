@@ -1,0 +1,41 @@
+-- GeoPulse: Geospatial Data Processing
+-- Converts latitude and longitude into Snowflake GEOGRAPHY points.
+-- Prerequisite: GPS_PINGS and STORES tables must already contain data.
+
+USE DATABASE GEOPULSE_DB;
+USE SCHEMA RAW_DATA;
+
+-- Step 1: Convert GPS coordinates to geographic points
+
+UPDATE GPS_PINGS
+SET LOCATION = ST_MAKEPOINT(LONGITUDE, LATITUDE)
+WHERE LOCATION IS NULL
+  AND LATITUDE BETWEEN -90 AND 90
+  AND LONGITUDE BETWEEN -180 AND 180;
+
+
+-- Step 2: Convert store coordinates to geographic points
+
+UPDATE STORES
+SET LOCATION = ST_MAKEPOINT(LON, LAT)
+WHERE LOCATION IS NULL
+  AND LAT BETWEEN -90 AND 90
+  AND LON BETWEEN -180 AND 180;
+
+
+-- Step 3: Validate GPS geographic points
+
+SELECT
+    COUNT(*) AS TOTAL_GPS_RECORDS,
+    COUNT(LOCATION) AS VALID_GPS_LOCATIONS,
+    COUNT_IF(LOCATION IS NULL) AS MISSING_GPS_LOCATIONS
+FROM GPS_PINGS;
+
+
+-- Step 4: Validate store geographic points
+
+SELECT
+    COUNT(*) AS TOTAL_STORES,
+    COUNT(LOCATION) AS VALID_STORE_LOCATIONS,
+    COUNT_IF(LOCATION IS NULL) AS MISSING_STORE_LOCATIONS
+FROM STORES;
