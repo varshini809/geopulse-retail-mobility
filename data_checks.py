@@ -45,3 +45,27 @@ out_of_order = (
     .apply(lambda times: not times.is_monotonic_increasing)
 )
 print("Devices with timestamps out of order:", out_of_order.sum())
+
+# Blank or null cells
+blank_cells = frame.astype("string").apply(
+    lambda column: column.str.strip().eq("")
+)
+missing_cells = frame.isna() | blank_cells
+
+print("Blank or null cells:", int(missing_cells.sum().sum()))
+
+# Completely duplicated rows
+print("Exact duplicate rows:", int(frame.duplicated().sum()))
+
+# Repeated device and timestamp pairs
+keys = frame[["device_id", "timestamp"]].astype("string")
+keys = keys.apply(lambda column: column.str.strip())
+valid_keys = (
+    keys["device_id"].notna()
+    & keys["timestamp"].notna()
+    & keys["device_id"].ne("")
+    & keys["timestamp"].ne("")
+)
+
+duplicate_pairs = keys.loc[valid_keys].duplicated().sum()
+print("Repeated device/timestamp pairs:", int(duplicate_pairs))
