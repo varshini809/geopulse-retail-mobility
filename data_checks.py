@@ -69,3 +69,32 @@ valid_keys = (
 
 duplicate_pairs = keys.loc[valid_keys].duplicated().sum()
 print("Repeated device/timestamp pairs:", int(duplicate_pairs))
+
+# Parse timestamps and count invalid or missing values
+timestamps = pd.to_datetime(frame["timestamp"], errors="coerce")
+invalid_timestamps = timestamps.isna()
+print("Invalid timestamps:", int(invalid_timestamps.sum()))
+
+# Check that timestamps are in order for each device
+ordered_rows = frame.loc[
+    ~invalid_timestamps & frame["device_id"].notna(),
+    ["device_id"]
+].copy()
+ordered_rows["timestamp"] = timestamps.loc[ordered_rows.index]
+
+out_of_order = ordered_rows.groupby("device_id")["timestamp"].apply(
+    lambda times: not times.is_monotonic_increasing
+)
+print("Devices with timestamps out of order:", int(out_of_order.sum()))
+
+# Check that coordinates are numeric and within global limits
+latitude = pd.to_numeric(frame["latitude"], errors="coerce")
+longitude = pd.to_numeric(frame["longitude"], errors="coerce")
+
+invalid_coordinates = (
+    latitude.isna()
+    | ~latitude.between(-90, 90)
+    | longitude.isna()
+    | ~longitude.between(-180, 180)
+)
+print("Invalid coordinates:", int(invalid_coordinates.sum()))
