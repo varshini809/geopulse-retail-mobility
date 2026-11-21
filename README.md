@@ -12,3 +12,10 @@
 
 After `pings.csv` is added to this folder, run:
 
+## Data status
+
+- The project will use synthetic GPS pings; no real phone location data is used.
+- The ping and store CSV files are pending.
+- The city area for validating coordinates has not been selected yet.
+- The checks and dictionary are based on the draft schema. Data validation results
+  will be added after the CSV files are available.
