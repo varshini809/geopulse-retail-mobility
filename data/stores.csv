@@ -1,0 +1,6 @@
+store_id,store_name,lat,lon,status
+STORE_A,Indiranagar Flagship (Existing),12.9784,77.6408,existing
+STORE_B,5th Street Proposed (Candidate),12.9802,77.6435,proposed
+STORE_C,Koramangala Hub (Existing),12.9352,77.6245,existing
+STORE_D,MG Road Central (Existing),12.9756,77.6066,existing
+STORE_E,Whitefield Tech Park (Candidate),12.9698,77.7499,proposed
